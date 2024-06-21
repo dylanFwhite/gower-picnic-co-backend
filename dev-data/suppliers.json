@@ -1,0 +1,24 @@
+[
+    {
+        "id": 0,
+        "name": "Good Food Crew",
+        "contact": {
+            "email": "gfc@email.com",
+            "phone": "+44 4444 444444"
+        },
+        "address":"1234 Road Street, City, Country",
+        "website": "https://www.gcf.com",
+        "image": "path/to/a/image/file.jpeg"
+    },
+    {
+        "id": 1,
+        "name": "Tasty Snack Gang",
+        "contact": {
+            "email": "tsg@email.com",
+            "phone": "+44 4444 444444"
+        },
+        "address":"1234 Road Street, City, Country",
+        "website": "https://www.tsg.com",
+        "image": "path/to/a/image/file.jpeg"
+    }
+]

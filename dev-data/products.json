@@ -1,0 +1,38 @@
+[
+    {
+        "id": 0,
+        "name": "Luxury Hamper",
+        "description": "A luxurious picnic hamper",
+        "allergens": ["dairy", "nuts", "gluten"],
+        "nutrition": ["1000 calories", "20g Protein"],
+        "image": "path/to/a/image/file.jpeg",
+        "price": 84.00,
+        "price_history": [94.00, 90.00, 84.00],
+        "add_on": false,
+        "suppliers": [0, 1]
+    },
+    {
+        "id": 1,
+        "name": "Picnic Tote",
+        "description": "A picnic in a tote bag",
+        "allergens": ["dairy", "nuts", "gluten"],
+        "nutrition": ["1000 calories", "20g Protein"],
+        "image": "path/to/a/image/file.jpeg",
+        "price": 42.00,
+        "price_history": [54.00, 50.00, 42.00],
+        "add_on": false,
+        "suppliers": [0]
+    },
+    {
+        "id": 2,
+        "name": "Honey Jar",
+        "description": "A jar of organic honey",
+        "allergens": [],
+        "nutrition": ["1000 calories", "20g Protein"],
+        "image": "path/to/a/image/file.jpeg",
+        "price": 4.00,
+        "price_history": [4.00],
+        "add_on": true,
+        "suppliers": [1]
+    }
+]
