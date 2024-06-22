@@ -8,8 +8,7 @@
         "imageCover": "path/to/a/image/file.jpeg",
         "price": 84.00,
         "priceHistory": [94.00, 90.00, 84.00],
-        "addOn": false,
-        "suppliers": [0, 1]
+        "addOn": false
     },
     {
         "id": 1,
@@ -20,8 +19,7 @@
         "imageCover": "path/to/a/image/file.jpeg",
         "price": 42.00,
         "priceHistory": [54.00, 50.00, 42.00],
-        "addOn": false,
-        "suppliers": [0]
+        "addOn": false
     },
     {
         "id": 2,
@@ -32,7 +30,6 @@
         "imageCover": "path/to/a/image/file.jpeg",
         "price": 4.00,
         "priceHistory": [4.00],
-        "addOn": true,
-        "suppliers": [1]
+        "addOn": true
     }
 ]
