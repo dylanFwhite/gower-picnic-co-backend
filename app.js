@@ -1,7 +1,7 @@
 import express from "express";
 import morgan from "morgan";
 
-import { AppError } from "./utils/appError.js";
+import AppError from "./utils/appError.js";
 import globalErrorHandler from "./utils/errorHandlers.js"
 import productRouter from "./routes/productRoutes.js"
 import customerRouter from "./routes/customerRoutes.js"
