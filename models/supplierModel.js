@@ -24,7 +24,7 @@ const supplierSchema = new mongoose.Schema(
         },
         address: String,
         website: {
-            type: string,
+            type: String,
             lowercase: true,
             validate: [validator.isURL, 'Please provide a valid website URL']
         },

@@ -46,7 +46,12 @@ const createOne = Model =>
 const getOne = (Model, popOptions) =>
   catchAsync(async (req, res, next) => {
     let query = Model.findById(req.params.id);
-    if (popOptions) query = query.populate(popOptions);
+    if (popOptions.length == 1) query = query.populate(popOptions);
+    if (popOptions.length > 1) {
+      for (let i = 0; i < popOptions.length; i++) {
+        query = query.populate(popOptions[i])
+      }
+    }
     const doc = await query;
 
     if (!doc) {

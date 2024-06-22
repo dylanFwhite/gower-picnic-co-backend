@@ -1,20 +1,16 @@
-import fs from "fs-extra"
-import catchAsync from "../utils/catchAsync.js"
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
-    
-const __dirname = dirname(fileURLToPath(import.meta.url));
+import Order from "../models/orderModel.js"
+import factory from "./handlerFactory.js"
 
-const orders = fs.readJsonSync(`${__dirname}/../dev-data/orders.json`)
+const getAllOrders = factory.getAll(Order)
 
-const getOrders = catchAsync(async (req, res) => {
-    res.status(200).json({
-        status: 'success',
-        results: orders.length,
-        data: orders
-    })
-})
+const getOrder = factory.getOne(Order, [{ path: 'customer' }, { path: 'products'}])
+
+const createOrder = factory.createOne(Order)
+
+const updateOrder = factory.updateOne(Order)
+
+const deleteOrder = factory.deleteOne(Order)
 
 export default {
-    getOrders
+    getAllOrders, getOrder, createOrder, updateOrder, deleteOrder
 }
