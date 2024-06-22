@@ -1,34 +1,38 @@
 [
     {
         "id": 0,
-        "timestamp": "2024-06-21T17:22:51.095Z",
-        "order_date": "2025-02-30T12:00:00.000Z",
+        "order_date": "1719049823740",
         "customer": 0,
         "products": [0, 2],
+        "price": 88.00,
+        "paid": true,
         "notes": "make it tasty please"
     },
     {
         "id": 1,
-        "timestamp": "2025-02-30T12:00:00.000Z",
-        "order_date": "Fri Feb 30 2025 12:00:00 GMT+0000",
+        "order_date": "1719049823740",
         "customer": 1,
         "products": [1],
+        "price": 42.00,
+        "paid": true,
         "notes": ""
     },
     {
         "id": 2,
-        "timestamp": "2025-02-30T12:00:00.000Z",
-        "order_date": "Fri Feb 30 2025 12:00:00 GMT+0000",
+        "order_date": "1719049823740",
         "customer": 0,
         "products": [0],
+        "price": 84.00,
+        "paid": true,
         "notes": "No butter in the honey"
     },
     {
         "id": 3,
-        "timestamp": "2025-02-30T12:00:00.000Z",
-        "order_date": "Fri Feb 30 2025 12:00:00 GMT+0000",
+        "order_date": "1719049823740",
         "customer": 2,
         "products": [1, 2],
+        "price": 46.00,
+        "paid": true,
         "notes": "Can I pick it up 15 mins earlier?"
     }
 ]
