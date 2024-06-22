@@ -1,5 +1,6 @@
 import "dotenv/config"
 import app from "./app.js"
+import mongoose from "mongoose";
 
 // Terminate process on unhandled rejections and uncaught exceptions
 process.on('unhandledRejection', (err) => {
@@ -20,16 +21,11 @@ process.on('uncaughtException', (err) => {
 const port = process.env.PORT || 5100
 
 try {
-    //TODO: Add DB Connection
-    // mongoose
-    //     .connect(process.env.MONGO_URL, {
-    //         useNewUrlParser: true,
-    //         useCreateIndex: true,
-    //         useFindAndModify: false,
-    //     })
-    //     .then(() => {
-    //         console.log('DB Connection Successful!');
-    //     });
+    mongoose
+        .connect(process.env.MONGO_URL)
+        .then(() => {
+            console.log('DB Connection Successful!');
+        });
     app.listen(port, () => {
         console.log(`Server running on PORT ${port}`)
     })
