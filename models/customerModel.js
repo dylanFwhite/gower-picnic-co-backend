@@ -22,12 +22,6 @@ const customerSchema = new mongoose.Schema({
     required: true,
     validate: [validator.isMobilePhone, "Please provide a valid mobile number"],
   },
-  orders: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: "Order",
-    },
-  ],
 });
 
 export default mongoose.model("Customer", customerSchema);
