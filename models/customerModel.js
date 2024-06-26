@@ -19,7 +19,6 @@ const customerSchema = new mongoose.Schema({
   },
   phone: {
     type: String,
-    required: true,
     validate: [validator.isMobilePhone, "Please provide a valid mobile number"],
   },
 });

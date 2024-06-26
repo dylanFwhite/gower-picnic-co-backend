@@ -8,26 +8,28 @@ const orderSchema = new mongoose.Schema({
   collectionDates: [
     {
       type: Date,
-      required: true,
+      required: [true, "An order must have at least one collectionDate"],
     },
   ],
   customer: {
     type: mongoose.Schema.ObjectId,
+    required: [true, "An order must belong to a customer"],
     ref: "Customer",
   },
   products: [
     {
       type: mongoose.Schema.ObjectId,
+      required: [true, "An order must have at least one product"],
       ref: "Product",
     },
   ],
   price: {
     type: Number,
-    require: [true, "Booking must have a price."],
+    required: [true, "Booking must have a price."],
   },
   paid: {
     type: Boolean,
-    default: true,
+    default: false,
   },
   notes: {
     type: String,
