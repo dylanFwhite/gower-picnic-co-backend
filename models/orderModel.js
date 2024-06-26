@@ -5,10 +5,12 @@ const orderSchema = new mongoose.Schema({
     type: Date,
     default: Date.now(),
   },
-  orderDate: {
-    type: Date,
-    required: true,
-  },
+  collectionDates: [
+    {
+      type: Date,
+      required: true,
+    },
+  ],
   customer: {
     type: mongoose.Schema.ObjectId,
     ref: "Customer",
