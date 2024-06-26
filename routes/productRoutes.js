@@ -8,6 +8,9 @@ router
   .get(productController.getAllProducts)
   .post(productController.createProduct);
 
+router.route("/main").get(productController.getMainProducts);
+router.route("/add-on").get(productController.getAddOnProducts);
+
 router
   .route("/:id")
   .get(productController.getProduct)
