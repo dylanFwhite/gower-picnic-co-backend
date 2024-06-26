@@ -14,7 +14,7 @@ const getOrder = factory.getOne(Order, [
 const createOrder = catchAsync(async (req, res, next) => {
   // Ensure that the product and collection dates are the same length
   const { products, collectionDates } = req.body;
-  console.log(products.length, collectionDates.length);
+
   if (products.length !== collectionDates.length) {
     return next(
       new AppError("collectionDates and products must be the same length", 400)
@@ -23,7 +23,7 @@ const createOrder = catchAsync(async (req, res, next) => {
   const order = await Order.create(req.body);
   const email = new Email({
     name: "Dylan White",
-    email: "white.dylan@live.co.ul=k",
+    email: "white.dylan@live.co.uk",
   });
 
   await email.send("Thanks for your order!");
