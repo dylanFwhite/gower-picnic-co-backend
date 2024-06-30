@@ -9,6 +9,7 @@ import customerRouter from "./routes/customerRoutes.js";
 import orderRouter from "./routes/orderRoutes.js";
 import supplierRouter from "./routes/supplierRoutes.js";
 import authRouter from "./routes/authRouter.js";
+import checkoutRouter from "./routes/checkoutRouter.js";
 import { authenticateUser } from "./middleware/auth.js";
 
 const app = express();
@@ -34,6 +35,8 @@ app.use("/api/v1/customers", authenticateUser, customerRouter);
 app.use("/api/v1/orders", authenticateUser, orderRouter);
 app.use("/api/v1/suppliers", supplierRouter);
 app.use("/api/v1/auth", authRouter);
+
+app.use("/api/v1/checkout", checkoutRouter);
 
 // Handlers ============================================
 // Handle un-captured requests - Must appear after all other Routes
