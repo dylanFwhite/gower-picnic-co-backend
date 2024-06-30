@@ -2,7 +2,7 @@ import { Router } from "express";
 import {
   createCheckoutSession,
   getSessionStatus,
-} from "../controllers/checkoutController";
+} from "../controllers/checkoutController.js";
 
 const router = Router();
 
