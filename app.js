@@ -11,8 +11,12 @@ import supplierRouter from "./routes/supplierRoutes.js";
 import authRouter from "./routes/authRouter.js";
 import checkoutRouter from "./routes/checkoutRouter.js";
 import { authenticateUser } from "./middleware/auth.js";
+import { webhookHandler } from "./controllers/checkoutController.js";
 
 const app = express();
+
+// Stripe Webhook handler - Needs to occur before JSON parser
+app.post("/webhook", express.raw({ type: "application/json" }), webhookHandler);
 
 // Default Middleware attachments ======================
 app.use(express.json());

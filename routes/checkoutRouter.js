@@ -1,12 +1,8 @@
 import { Router } from "express";
-import {
-  createCheckoutSession,
-  getSessionStatus,
-} from "../controllers/checkoutController.js";
+import { createPaymentIntent } from "../controllers/checkoutController.js";
 
 const router = Router();
 
-router.post("/create-checkout-session", createCheckoutSession);
-router.get("/session-status", getSessionStatus);
+router.post("/create-payment-intent", createPaymentIntent);
 
 export default router;

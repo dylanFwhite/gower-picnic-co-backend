@@ -5,12 +5,10 @@ const orderSchema = new mongoose.Schema({
     type: Date,
     default: Date.now(),
   },
-  collectionDates: [
-    {
-      type: Date,
-      required: [true, "An order must have at least one collectionDate"],
-    },
-  ],
+  collectionDate: {
+    type: Date,
+    required: [true, "An order must have a collectionDate"],
+  },
   customer: {
     type: mongoose.Schema.ObjectId,
     required: [true, "An order must belong to a customer"],
