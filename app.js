@@ -35,7 +35,7 @@ app.use((req, res, next) => {
 
 // Routes =============================================
 app.use("/api/v1/products", productRouter);
-app.use("/api/v1/customers", authenticateUser, customerRouter);
+app.use("/api/v1/customers", customerRouter);
 app.use("/api/v1/orders", authenticateUser, orderRouter);
 app.use("/api/v1/suppliers", supplierRouter);
 app.use("/api/v1/auth", authRouter);
