@@ -1,10 +1,11 @@
 import nodemailer from "nodemailer";
+// import htmlToText from "html-to-text";
 
 export default class Email {
   constructor(customer) {
     this.to = customer.email;
     this.firstName = customer.name.split(" ")[0];
-    this.from = `Gower Picnic Company <${process.env.EMAIL_FROM}>`;
+    this.admin = `Gower Picnic Company <${process.env.ADMIN_EMAIL}>`;
   }
 
   newTransport() {
@@ -33,15 +34,36 @@ export default class Email {
   }
 
   // Send the actual email
-  async send(subject) {
+  async send(subject, template) {
     const mailOptions = {
-      from: this.from,
+      from: this.admin,
       to: this.to,
       subject,
-      text: "Thank you for ordering from the Gower Picnic Company",
+      html: template,
+      // text: htmlToText.fromString(template),
     };
 
-    // 3) Create a transport and send email
     await this.newTransport().sendMail(mailOptions);
+  }
+
+  async sendConfirmation(customer, order) {
+    const customerMailOptions = {
+      from: this.from,
+      to: this.admin,
+      subject: "Thank you for your order!",
+      // html:
+      text: "Thank you for ordering from the Gower Picnic Company",
+    };
+    const adminMailOptions = {
+      from: this.admin,
+      to: this.admin,
+      subject: "New Order",
+      // html:
+      text: `New order from ${customer.email}.
+      Products: ${order.products}.
+      Date: ${order.collectionDate}`,
+    };
+    await this.newTransport().sendMail(customerMailOptions);
+    await this.newTransport().sendMail(adminMailOptions);
   }
 }
