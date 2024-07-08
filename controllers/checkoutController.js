@@ -1,32 +1,66 @@
 import loadStripe from "stripe";
+import Order from "../models/orderModel.js";
+import Customer from "../models/customerModel.js";
 import catchAsync from "../utils/catchAsync.js";
+import AppError from "../utils/appError.js";
+import Product from "../models/productModel.js";
+import Email from "../utils/email.js";
 
 const stripe = loadStripe(process.env.STRIPE_TOKEN);
-const endpointSecret =
-  "whsec_240feddde17c5b5c2f4d277dbdfb2488be72d3617fc4b43a062f3c471a32eb22";
+const endpointSecret = process.env.STRIPE_WEBHOOK_TOKEN;
 
-const calculateOrderAmount = (items) => {
-  console.log(items);
-  return 8400;
-};
+const calculateOrderAmount = catchAsync(async (productIds) => {
+  const products = await Product.find({ _id: { $in: productIds } });
+  if (!products) return new AppError("Could not find products", 400);
+  const amount = products
+    .map((product) => product.price)
+    .reduce((acc, curr) => acc + curr, 0);
+  return amount;
+});
 
-const createPaymentIntent = catchAsync(async (req, res) => {
-  const { items } = req.body;
+const createPaymentIntent = catchAsync(async (req, res, next) => {
+  const { collectionDate, productIds, note, customer, customerEmail } =
+    req.body;
+  const amount = await calculateOrderAmount(productIds);
 
-  // TODO: Create customer if it doesn't exist
-  // TODO: Create Order
+  const order = await Order.create({
+    collectionDate,
+    products: productIds,
+    // NOTE: On DB price is in £ but Stripe has price in pence
+    price: amount,
+    note,
+    customer,
+  });
+  if (!order) return next(new AppError("Could not create order", 400));
 
   const paymentIntent = await stripe.paymentIntents.create({
-    amount: calculateOrderAmount(items),
+    amount: amount * 100,
     currency: "gbp",
+    metadata: {
+      orderId: order._id.toString(),
+    },
     automatic_payment_methods: {
       enabled: true,
     },
+    receipt_email: customerEmail,
   });
 
   res.send({
     clientSecret: paymentIntent.client_secret,
   });
+});
+
+const handlePaymentIntentSucceeded = catchAsync(async (data) => {
+  const { customerEmail, orderId } = data;
+  // Update order paid status
+  const order = await Order.findOneAndUpdate(
+    { _id: orderId },
+    { paid: true },
+    { new: true }
+  );
+  // Send confirmation email to both the customer and the Admin
+  const customer = await Customer.findOne({ email: customerEmail });
+  await new Email(customer).sendConfirmation(customer, order);
 });
 
 const webhookHandler = (req, res) => {
@@ -50,12 +84,11 @@ const webhookHandler = (req, res) => {
   }
 
   // Handle the event
-  const data = event.data.object;
+  const customerEmail = event.data.object.receipt_email;
+  const orderId = event.data.object.metadata.orderId;
   switch (event.type) {
     case "payment_intent.succeeded":
-      console.log(`PaymentIntent for ${data.amount} was successful!`);
-      // TODO: Trigger emails and update `paid` status
-      // handlePaymentIntentSucceeded(paymentIntent);
+      handlePaymentIntentSucceeded({ customerEmail, orderId });
       break;
     default:
       // Unexpected event type
