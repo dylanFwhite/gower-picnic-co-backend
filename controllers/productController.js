@@ -5,7 +5,21 @@ import factory from "./handlerFactory.js";
 
 const getAllProducts = factory.getAll(Product);
 
-const getProduct = factory.getOne(Product, { path: "suppliers" });
+const getProduct = catchAsync(async (req, res, next) => {
+  let query = Product.findById(req.params.id);
+  query = query.populate({ path: "suppliers" });
+
+  const doc = await query;
+
+  if (!doc) {
+    return next(new AppError("No document found with that ID", 404));
+  }
+
+  res.status(200).json({
+    status: "success",
+    data: doc,
+  });
+});
 
 const createProduct = factory.createOne(Product);
 

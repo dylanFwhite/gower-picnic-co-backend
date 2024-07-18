@@ -3,11 +3,6 @@ import productController from "../controllers/productController.js";
 
 const router = express.Router();
 
-router
-  .route("/")
-  .get(productController.getAllProducts)
-  .post(productController.createProduct);
-
 router.route("/main").get(productController.getMainProducts);
 router.route("/add-on").get(productController.getAddOnProducts);
 
@@ -16,5 +11,10 @@ router
   .get(productController.getProduct)
   .patch(productController.updateProduct)
   .delete(productController.deleteProduct);
+
+router
+  .route("/")
+  .get(productController.getAllProducts)
+  .post(productController.createProduct);
 
 export default router;
