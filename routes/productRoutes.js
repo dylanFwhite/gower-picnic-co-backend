@@ -3,8 +3,9 @@ import productController from "../controllers/productController.js";
 
 const router = express.Router();
 
-router.route("/main").get(productController.getMainProducts);
-router.route("/add-on").get(productController.getAddOnProducts);
+router.route("/picnic").get(productController.getPicnics);
+router.route("/product").get(productController.getProducts);
+router.route("/add-on").get(productController.getAddOns);
 
 router
   .route("/:id")

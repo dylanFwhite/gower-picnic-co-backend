@@ -20,11 +20,9 @@ const productSchema = new mongoose.Schema({
   },
   allergens: {
     type: [String],
-    required: [true, "A product must have an allergens list"],
   },
   nutrition: {
     type: [String],
-    required: [true, "A product must have an nutrition list"],
   },
   imageCover: {
     type: String,
@@ -45,9 +43,10 @@ const productSchema = new mongoose.Schema({
     },
   },
   priceHistory: [Number],
-  addOn: {
-    type: Boolean,
+  type: {
+    type: String,
     required: true,
+    enum: ["picnic", "product", "addOn"],
   },
   suppliers: [
     {

@@ -27,8 +27,8 @@ const updateProduct = factory.updateOne(Product);
 
 const deleteProduct = factory.deleteOne(Product);
 
-const getMainProducts = catchAsync(async (req, res, next) => {
-  const mainProducts = await Product.find({ addOn: false }).select([
+const getPicnics = catchAsync(async (req, res, next) => {
+  const mainProducts = await Product.find({ type: "picnic" }).select([
     "_id",
     "name",
     "description",
@@ -45,8 +45,26 @@ const getMainProducts = catchAsync(async (req, res, next) => {
   });
 });
 
-const getAddOnProducts = catchAsync(async (req, res, next) => {
-  const addOns = await Product.find({ addOn: true }).select([
+const getAddOns = catchAsync(async (req, res, next) => {
+  const addOns = await Product.find({ type: "addOn" }).select([
+    "name",
+    "description",
+    "imageCover",
+    "price",
+  ]);
+
+  if (!addOns) {
+    return next(new AppError("Could not find any add ons", 404));
+  }
+
+  res.status(200).json({
+    status: "success",
+    data: addOns,
+  });
+});
+
+const getProducts = catchAsync(async (req, res, next) => {
+  const addOns = await Product.find({ type: "product" }).select([
     "name",
     "description",
     "imageCover",
@@ -69,6 +87,7 @@ export default {
   createProduct,
   updateProduct,
   deleteProduct,
-  getMainProducts,
-  getAddOnProducts,
+  getPicnics,
+  getAddOns,
+  getProducts,
 };
