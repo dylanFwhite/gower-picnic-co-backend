@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const orderSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
-    default: Date.now(),
+    default: Date.now,
   },
   collectionDate: {
     type: Date,

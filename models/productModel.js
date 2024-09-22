@@ -18,6 +18,11 @@ const productSchema = new mongoose.Schema({
     required: [true, "A product must have a description"],
     trim: true,
   },
+  summary: {
+    type: String,
+    required: [true, "A product must have a summary"],
+    trim: true,
+  },
   allergens: {
     type: [String],
   },
