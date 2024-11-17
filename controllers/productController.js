@@ -1,4 +1,5 @@
 import Product from "../models/productModel.js";
+import Order from "../models/orderModel.js";
 import AppError from "../utils/appError.js";
 import catchAsync from "../utils/catchAsync.js";
 import factory from "./handlerFactory.js";
@@ -28,12 +29,9 @@ const updateProduct = factory.updateOne(Product);
 const deleteProduct = factory.deleteOne(Product);
 
 const getPicnics = catchAsync(async (req, res, next) => {
-  const mainProducts = await Product.find({ type: "picnic" }).select([
-    "_id",
-    "name",
-    "description",
-    "imageCover",
-  ]);
+  const mainProducts = await Product.find({
+    type: { $in: ["luxury-picnic", "picnic"] },
+  }).select(["_id", "name", "description", "imageCover"]);
 
   if (!mainProducts) {
     return next(new AppError("Could not find any main products", 404));
@@ -81,6 +79,59 @@ const getProducts = catchAsync(async (req, res, next) => {
   });
 });
 
+const getAvailability = catchAsync(async (req, res) => {
+  let orders = await Order.find({
+    // type: req.params.type,
+    collectionDate: { $gt: new Date() },
+  })
+    .select(["collectionDate", "products"])
+    .populate({ path: "products", select: "type" });
+
+  if (!orders) {
+    res.status(200).json({
+      status: "success",
+      data: [],
+    });
+  }
+
+  const available = orders.map((order) => {
+    const count = order.products.filter(
+      (prod) => prod.type == req.params.type
+    ).length;
+
+    return {
+      date: order.collectionDate,
+      count,
+    };
+  });
+
+  const dates = orders.map((order) => order.collectionDate);
+  const datesUnique = dates.filter(
+    (date, i, self) =>
+      self.findIndex((d) => d.getTime() === date.getTime()) === i
+  );
+
+  const datesCount = datesUnique.map((date) => {
+    return {
+      date,
+      count: Math.max(
+        0,
+        5 -
+          available
+            .map((item) =>
+              item.date.getTime() === date.getTime() ? item.count : 0
+            )
+            .reduce((acc, curr) => acc + curr)
+      ),
+    };
+  });
+
+  res.status(200).json({
+    status: "success",
+    data: datesCount,
+  });
+});
+
 export default {
   getAllProducts,
   getProduct,
@@ -90,4 +141,5 @@ export default {
   getPicnics,
   getAddOns,
   getProducts,
+  getAvailability,
 };

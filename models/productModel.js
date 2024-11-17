@@ -51,7 +51,7 @@ const productSchema = new mongoose.Schema({
   type: {
     type: String,
     required: true,
-    enum: ["picnic", "product", "addOn"],
+    enum: ["luxury-picnic", "picnic", "product", "addOn"],
   },
   suppliers: [
     {

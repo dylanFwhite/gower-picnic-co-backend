@@ -18,4 +18,6 @@ router
   .get(productController.getAllProducts)
   .post(productController.createProduct);
 
+router.get("/availability/:type", productController.getAvailability);
+
 export default router;
