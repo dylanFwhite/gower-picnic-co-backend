@@ -79,9 +79,8 @@ const getProducts = catchAsync(async (req, res, next) => {
   });
 });
 
-const getAvailability = catchAsync(async (req, res) => {
+const getAvailabilityCount = catchAsync(async (req, res) => {
   let orders = await Order.find({
-    // type: req.params.type,
     collectionDate: { $gt: new Date() },
   })
     .select(["collectionDate", "products"])
@@ -94,10 +93,58 @@ const getAvailability = catchAsync(async (req, res) => {
     });
   }
 
+  const datesCount = getDatesCount(orders, req.params.type);
+
+  const availabilityDates = datesCount.map((item) => {
+    return {
+      date: item.date,
+      count: Math.max(0, 5 - item.count),
+    };
+  });
+
+  res.status(200).json({
+    status: "success",
+    data: availabilityDates,
+  });
+});
+
+const getUnavailableDates = catchAsync(async (req, res) => {
+  const { luxuryPicnic, picnic } = req.body;
+
+  let orders = await Order.find({
+    collectionDate: { $gt: new Date() },
+  })
+    .select(["collectionDate", "products"])
+    .populate({ path: "products", select: "type" });
+
+  if (!orders) {
+    res.status(200).json({
+      status: "success",
+      data: [],
+    });
+  }
+
+  const luxuryPicnicNonAvailable = luxuryPicnic
+    ? getDatesCount(orders, "luxury-picnic")
+        .filter((item) => item.count >= 5)
+        .map((item) => item.date)
+    : [];
+  const picnicNonAvailable = picnic
+    ? getDatesCount(orders, "picnic")
+        .filter((item) => item.count >= 5)
+        .map((item) => item.date)
+    : [];
+
+  const nonDates = [...luxuryPicnicNonAvailable, ...picnicNonAvailable];
+  res.status(200).json({
+    status: "success",
+    data: nonDates,
+  });
+});
+
+const getDatesCount = (orders, type) => {
   const available = orders.map((order) => {
-    const count = order.products.filter(
-      (prod) => prod.type == req.params.type
-    ).length;
+    const count = order.products.filter((prod) => prod.type == type).length;
 
     return {
       date: order.collectionDate,
@@ -106,31 +153,25 @@ const getAvailability = catchAsync(async (req, res) => {
   });
 
   const dates = orders.map((order) => order.collectionDate);
+
   const datesUnique = dates.filter(
     (date, i, self) =>
       self.findIndex((d) => d.getTime() === date.getTime()) === i
   );
-
-  const datesCount = datesUnique.map((date) => {
-    return {
-      date,
-      count: Math.max(
-        0,
-        5 -
-          available
-            .map((item) =>
-              item.date.getTime() === date.getTime() ? item.count : 0
-            )
-            .reduce((acc, curr) => acc + curr)
-      ),
-    };
-  });
-
-  res.status(200).json({
-    status: "success",
-    data: datesCount,
-  });
-});
+  const datesCount = datesUnique
+    .map((date) => {
+      return {
+        date,
+        count: available
+          .map((item) =>
+            item.date.getTime() === date.getTime() ? item.count : 0
+          )
+          .reduce((acc, curr) => acc + curr),
+      };
+    })
+    .filter((item) => item.count !== 0);
+  return datesCount;
+};
 
 export default {
   getAllProducts,
@@ -141,5 +182,6 @@ export default {
   getPicnics,
   getAddOns,
   getProducts,
-  getAvailability,
+  getAvailabilityCount,
+  getUnavailableDates,
 };

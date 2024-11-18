@@ -18,6 +18,7 @@ router
   .get(productController.getAllProducts)
   .post(productController.createProduct);
 
-router.get("/availability/:type", productController.getAvailability);
+router.get("/availability/:type", productController.getAvailabilityCount);
+router.post("/availability", productController.getUnavailableDates);
 
 export default router;
