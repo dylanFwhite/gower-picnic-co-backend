@@ -1,6 +1,9 @@
 import express from "express";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
+import rateLimit from "express-rate-limit";
+import helmet from "helmet";
+import mongoSanitise from "express-mongo-sanitize";
 
 import AppError from "./utils/appError.js";
 import globalErrorHandler from "./utils/errorHandlers.js";
@@ -19,12 +22,25 @@ const app = express();
 app.post("/webhook", express.raw({ type: "application/json" }), webhookHandler);
 
 // Default Middleware attachments ======================
-app.use(express.json());
+app.use(helmet());
+const limiter = rateLimit({
+  max: 100,
+  windowMs: 30 * 60 * 1000,
+  message: "Too many requests from this IP, please try again in 30 mins",
+});
+app.use("/api", limiter);
+
+app.use(express.json({ limit: "10kb" }));
+app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 app.use(cookieParser());
 
-if (process.env.NODE_ENV === "development") {
-  app.use(morgan("dev"));
-}
+app.use(
+  morgan(
+    "[:date[clf]] :remote-addr :method :url HTTP/:http-version :status :res[content-length] - :response-time ms"
+  )
+);
+
+app.use(mongoSanitise());
 
 // Custom Middleware attachments =======================
 // Attach request date to request object
