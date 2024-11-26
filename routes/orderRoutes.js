@@ -1,15 +1,14 @@
 import express from "express";
 import orderController from "../controllers/orderController.js";
-import { authenticateUser } from "../middleware/auth.js";
 
 const router = express.Router();
 
-router.route("/").get(authenticateUser, orderController.getAllOrders);
+router.route("/").get(orderController.getAllOrders);
 
 router
   .route("/:id")
-  .get(authenticateUser, orderController.getOrder)
-  .patch(authenticateUser, orderController.updateOrder)
-  .delete(authenticateUser, orderController.deleteOrder);
+  .get(orderController.getOrder)
+  .patch(orderController.updateOrder)
+  .delete(orderController.deleteOrder);
 
 export default router;
