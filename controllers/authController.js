@@ -28,5 +28,5 @@ export const logout = (req, res) => {
     httpOnly: true,
     expires: new Date(Date.now()),
   });
-  res.status(400).json({ msg: "User logged out" });
+  res.status(200).json({ msg: "User logged out" });
 };
