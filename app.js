@@ -3,6 +3,8 @@ import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
+import hpp from "hpp";
+import cors from "cors";
 import mongoSanitise from "express-mongo-sanitize";
 
 import AppError from "./utils/appError.js";
@@ -18,10 +20,10 @@ import { webhookHandler } from "./controllers/checkoutController.js";
 
 const app = express();
 
-// Stripe Webhook handler - Needs to occur before JSON parser
-app.post("/webhook", express.raw({ type: "application/json" }), webhookHandler);
-
 // Default Middleware attachments ======================
+app.use(cors({ origin: "https://gower-picnic-company.co.uk/" }));
+app.options("*", cors());
+
 app.use(helmet());
 const limiter = rateLimit({
   max: 100,
@@ -29,6 +31,9 @@ const limiter = rateLimit({
   message: "Too many requests from this IP, please try again in 30 mins",
 });
 app.use("/api", limiter);
+
+// Stripe Webhook handler - Needs to occur before JSON parser
+app.post("/webhook", express.raw({ type: "application/json" }), webhookHandler);
 
 app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
@@ -41,6 +46,13 @@ app.use(
 );
 
 app.use(mongoSanitise());
+
+// Prevent parameter pollution
+app.use(
+  hpp({
+    whitelist: ["type", "createdAt", "price"],
+  })
+);
 
 // Custom Middleware attachments =======================
 // Attach request date to request object
